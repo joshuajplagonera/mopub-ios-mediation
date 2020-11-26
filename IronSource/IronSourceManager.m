@@ -47,26 +47,26 @@ NSMapTable<NSString *, id<IronSourceInterstitialDelegate>>
 }
 
 - (void)initIronSourceSDKWithAppKey:(NSString *)appKey forAdUnits:(NSSet *)adUnits {
-    if([adUnits member:@[IS_INTERSTITIAL]] != nil){
+    if([adUnits member:IS_INTERSTITIAL] != nil) {
         static dispatch_once_t onceTokenIS;
 
         dispatch_once(&onceTokenIS, ^{
             [IronSource setISDemandOnlyInterstitialDelegate:self];
-            [IronSource initISDemandOnly:appKey adUnits:@[IS_INTERSTITIAL]];
         });
     }
-    if([adUnits member:@[IS_REWARDED_VIDEO]] != nil){
+    if([adUnits member:IS_REWARDED_VIDEO] != nil){
         static dispatch_once_t onceTokenRV;
 
         dispatch_once(&onceTokenRV, ^{
             [IronSource setISDemandOnlyRewardedVideoDelegate:self];
-            [IronSource initISDemandOnly:appKey adUnits:@[IS_REWARDED_VIDEO]];
         });
     }
+    
+    [IronSource initISDemandOnly:appKey adUnits:[adUnits allObjects]];
 }
 
 - (void)loadRewardedAdWithDelegate:
-(id<IronSourceRewardedVideoDelegate>)delegate instanceID:(NSString *)instanceID {
+(id<IronSourceRewardedVideoDelegate>)delegate instanceID:(NSString *)instanceID WithAdMarkup: (NSString *) adMarkup {
     id<IronSourceRewardedVideoDelegate> adapterDelegate = delegate;
     
     if (adapterDelegate == nil) {
@@ -75,8 +75,13 @@ NSMapTable<NSString *, id<IronSourceInterstitialDelegate>>
     }
         [self addRewardedDelegate:adapterDelegate forInstanceID:instanceID];
         MPLogDebug(@"IronSourceManager - load Rewarded Video called for instance Id %@", instanceID);
+        
+    if (adMarkup != nil) {
+        [IronSource loadISDemandOnlyRewardedVideoWithAdm:instanceID adm:adMarkup];
+    } else {
         [IronSource loadISDemandOnlyRewardedVideo:instanceID];
     }
+}
 
 - (void)presentRewardedAdFromViewController:(nonnull UIViewController *)viewController
                                  instanceID:(NSString *)instanceID {
@@ -86,7 +91,7 @@ NSMapTable<NSString *, id<IronSourceInterstitialDelegate>>
 
 - (void)requestInterstitialAdWithDelegate:
 (id<IronSourceInterstitialDelegate>)delegate
-                               instanceID:(NSString *)instanceID{
+                               instanceID:(NSString *)instanceID WithAdMarkup: (NSString *) adMarkup {
     id<IronSourceInterstitialDelegate> adapterDelegate = delegate;
     
     if (adapterDelegate == nil) {
@@ -96,7 +101,11 @@ NSMapTable<NSString *, id<IronSourceInterstitialDelegate>>
     
     [self addInterstitialDelegate:adapterDelegate forInstanceID:instanceID];
     MPLogDebug(@"IronSourceManager - load Interstitial called for instance Id %@", instanceID);
-    [IronSource loadISDemandOnlyInterstitial:instanceID];
+    if (adMarkup != nil) {
+        [IronSource loadISDemandOnlyInterstitialWithAdm:instanceID adm:adMarkup];
+    } else {
+        [IronSource loadISDemandOnlyInterstitial:instanceID];
+    }
 }
 
 - (void)presentInterstitialAdFromViewController:(nonnull UIViewController *)viewController

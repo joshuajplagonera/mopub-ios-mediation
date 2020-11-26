@@ -1,4 +1,51 @@
 ## Changelog
+  * 7.68.0.1
+    * Add support for `fullscreenAdAdapterAdDidDismiss:` to signal that the fullscreen ad is closing and the state should be reset. To use this adapter version, you need v5.15.0 of the MoPub iOS SDK at the minimum.
+    * Remove `nativeVideoView` as part of MoPub's native video code removal. This does not impact AdMob. No external changes or actions rerquired for publishers. 
+
+  * 7.68.0.0
+    * This version of the adapters has been certified with AdMob 7.68.0 and MoPub 5.14.1.
+    * MoPub now tracks banner impressions via Google's `adViewDidRecordImpression` callback.
+
+  * 7.66.0.1
+    * Prevent oversized banner ads from serving by failing the ad request if the creative's width or height is greater than the publishers-specified width or height.
+
+  * 7.66.0.0
+    * This version of the adapters has been certified with AdMob 7.66.0 and MoPub 5.14.0.
+
+  * 7.65.0.0
+    * This version of the adapters has been certified with AdMob 7.65.0 and MoPub 5.13.1.
+
+  * 7.64.0.1
+    * Remove unnecessary `VALID_ARCHS` declaration.
+
+  * 7.64.0.0
+    * This version of the adapters has been certified with AdMob 7.64.0 and MoPub 5.13.1. 
+    * Note that, while AdMob 7.64.0 supports iOS 14, this adapter version is not certified using iOS 14. For iOS 14 compatibility, expect an upcoming adapter release.
+
+  * 7.63.0.0
+    * This version of the adapters has been certified with AdMob 7.63.0 and MoPub 5.13.1.
+
+  * 7.62.0.1
+    * Fix adapter compiler warnings.
+
+  * 7.62.0.0
+    * This version of the adapters has been certified with AdMob 7.62.0 and MoPub 5.13.1.
+
+  * 7.61.0.1
+    * Remove i386 architecture support for iPhone simulators.
+
+  * 7.61.0.0
+    * This version of the adapters has been certified with AdMob 7.61.0 and MoPub 5.13.0.
+
+  * 7.60.0.0
+    * This version of the adapters has been certified with AdMob 7.60.0 and MoPub 5.13.0.
+
+  * 7.59.0.1
+    * Refactor non-native adapter classes to use the new consolidated API from MoPub.
+    * Remove banner size mapping checks to fully take advantage of adaptive banner.
+    * To use this and newer adapter versions, you must use MoPub 5.13.0 or newer.
+    
   * 7.59.0.0
     * This version of the adapters has been certified with AdMob 7.59.0 and MoPub 5.12.1.
 

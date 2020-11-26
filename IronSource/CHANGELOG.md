@@ -1,4 +1,45 @@
 ## Changelog
+* 7.0.3.0.2
+    * Add support for `fullscreenAdAdapterAdDidDismiss:` to signal that the fullscreen ad is closing and the state should be reset. To use this adapter version, you need v5.15.0 of the MoPub iOS SDK at the minimum.
+
+* 7.0.3.0.1
+    * Fix a bug in `IronSourceAdapterConfiguration.m ` to correctly parse `interstitialStatus`.
+
+* 7.0.3.0.0
+    * This version of the adapters has been certified with ironSource 7.0.3.0 and MoPub SDK 5.14.1.
+
+* 7.0.2.0.0
+    * This version of the adapters has been certified with ironSource 7.0.2.0 and MoPub SDK 5.14.1.
+
+* 7.0.1.0.0
+    * This version of the adapters has been certified with ironSource 7.0.1.0 and MoPub SDK 5.13.1.
+    * Note that, while ironSource 7.0.1.0 supports iOS 14, this adapter version is not certified using iOS 14.
+    For iOS 14 compatibility, expect an upcoming adapter release.
+
+* 6.18.0.2.0
+    * This version of the adapters has been certified with ironSource 6.18.0.2 and MoPub SDK 5.13.1.
+
+* 6.18.0.1.0
+    * This version of the adapters has been certified with ironSource 6.18.0.1 and MoPub SDK 5.13.1.
+    * Service release. No new features.
+
+* 6.18.0.0.1
+    * Fix adapter compiler warnings.
+
+* 6.18.0.0.0
+    * This version of the adapters has been certified with ironSource 6.18.0.0 and MoPub SDK 5.13.1.
+
+* 6.17.0.1.0
+    * This version of the adapters has been certified with ironSource 6.17.0.1 and MoPub SDK 5.13.1.
+    * Renamed `moPubNetworkName` to `ironsource` on the adapter configuration.
+
+* 6.16.3.0.0
+    * This version of the adapters has been certified with ironSource 6.16.3.0 and MoPub SDK 5.13.0.
+
+* 6.16.1.0.1
+    * Refactor non-native adapter classes to use the new consolidated API from MoPub.
+    * To use this and newer adapter versions, you must use MoPub 5.13.0 or newer.
+
 * 6.16.1.0.0
     * This version of the adapters has been certified with ironSource 6.16.1.0 and MoPub SDK 5.12.0.
 

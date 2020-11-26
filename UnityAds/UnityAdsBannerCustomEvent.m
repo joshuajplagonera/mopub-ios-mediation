@@ -19,6 +19,8 @@ static NSString *const kUnityAdsOptionZoneIdKey = @"zoneId";
 @end
 
 @implementation UnityAdsBannerCustomEvent
+@dynamic delegate;
+@dynamic localExtras;
 
 - (BOOL)enableAutomaticImpressionAndClickTracking
 {
@@ -40,7 +42,7 @@ static NSString *const kUnityAdsOptionZoneIdKey = @"zoneId";
     self.bannerAdView = nil;
 }
 
--(void)requestAdWithSize:(CGSize)size customEventInfo:(NSDictionary *)info adMarkup:(NSString *)adMarkup {
+-(void)requestAdWithSize:(CGSize)size adapterInfo:(NSDictionary *)info adMarkup:(NSString *)adMarkup {
     NSString *gameId = info[kMPUnityBannerGameId];
     self.placementId = info[kUnityAdsOptionPlacementIdKey];
     
@@ -57,24 +59,32 @@ static NSString *const kUnityAdsOptionZoneIdKey = @"zoneId";
                                  andSuggestion:@"Ensure the format type of your MoPub adunit is banner and not Medium Rectangle."];
         
         MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:error], [self getAdNetworkId]);
-        [self.delegate bannerCustomEvent:self didFailToLoadAdWithError:nil];
+        [self.delegate inlineAdAdapter:self didFailToLoadAdWithError:nil];
         
         return;
     }
     
     if (gameId == nil || self.placementId == nil) {
-        NSError *error = [self createErrorWith:@"Unity Ads adapter failed to request Ad"
+        NSError *error = [self createErrorWith:@"Unity Ads adapter failed to request banner ad"
                                      andReason:@"Custom event class data did not contain gameId/placementId"
                                  andSuggestion:@"Update your MoPub custom event class data to contain a valid Unity Ads gameId/placementId."];
         MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:error], [self getAdNetworkId]);
-        
-        [self.delegate bannerCustomEvent:self didFailToLoadAdWithError:error];
+        [self.delegate inlineAdAdapter:self didFailToLoadAdWithError:error];
         
         return;
-        
     }
     
-    [[UnityRouter sharedRouter] initializeWithGameId:gameId];
+    if (![UnityAds isInitialized]) {
+        [[UnityRouter sharedRouter] initializeWithGameId:gameId withCompletionHandler:nil];
+        
+        NSError *error = [self createErrorWith:@"Unity Ads adapter failed to request interstitial ad, Unity Ads is not initialized yet. Failing this ad request and calling Unity Ads initialization so it would be available for an upcoming ad request"
+                                     andReason:@"Unity Ads is not initialized."
+                                 andSuggestion:@""];
+        MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:error], [self getAdNetworkId]);
+        [self.delegate inlineAdAdapter:self didFailToLoadAdWithError:error];
+        
+        return;
+    }
     
     CGSize adSize = [self unityAdsAdSizeFromRequestedSize:size];
     
@@ -118,18 +128,18 @@ static NSString *const kUnityAdsOptionZoneIdKey = @"zoneId";
     MPLogAdEvent([MPLogEvent adShowAttemptForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
     MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
     
-    [self.delegate bannerCustomEvent:self didLoadAd:bannerView];
-    [self.delegate trackImpression];
+    [self.delegate inlineAdAdapter:self didLoadAdWithAdView:bannerView];
+    [self.delegate inlineAdAdapterDidTrackImpression:self];
 }
 
 - (void)bannerViewDidClick:(UADSBannerView *)bannerView {
     MPLogAdEvent([MPLogEvent adTappedForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
-    
-    [self.delegate trackClick];
+    [self.delegate inlineAdAdapterWillBeginUserAction:self];
+    [self.delegate inlineAdAdapterDidTrackClick:self];
 }
 
 - (void)bannerViewDidLeaveApplication:(UADSBannerView *)bannerView {
-    [self.delegate bannerCustomEventWillLeaveApplication:self];
+    [self.delegate inlineAdAdapterWillLeaveApplication:self];
 }
 
 - (void)bannerViewDidError:(UADSBannerView *)bannerView error:(UADSBannerError *)error{
@@ -155,7 +165,7 @@ static NSString *const kUnityAdsOptionZoneIdKey = @"zoneId";
     
     MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:mopubAdaptorErrorMessage], [self getAdNetworkId]);
 
-    [self.delegate bannerCustomEvent:self didFailToLoadAdWithError:nil];
+    [self.delegate inlineAdAdapter:self didFailToLoadAdWithError:nil];
 }
 
 - (NSString *) getAdNetworkId {

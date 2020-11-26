@@ -10,12 +10,14 @@
 #elif __has_include(<MoPubSDKFramework/MoPub.h>)
 #import <MoPubSDKFramework/MoPub.h>
 #else
-#import "MPBannerCustomEvent.h"
+#import "MPInlineAdAdapter.h"
 #import "MoPub.h"
 #endif
 
 #import "MPGoogleGlobalMediationSettings.h"
 
-@interface MPGoogleAdMobBannerCustomEvent : MPBannerCustomEvent
+@interface MPGoogleAdMobBannerCustomEvent : MPInlineAdAdapter <MPThirdPartyInlineAdAdapter>
++(CGFloat) adWidth;
++(CGFloat) adHeight;
 
 @end

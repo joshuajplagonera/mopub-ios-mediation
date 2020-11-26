@@ -1,26 +1,17 @@
-//
-//  FlurryAdapterConfiguration.h
-//  MoPubSDK
-//
-//  Copyright © 2017 MoPub. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
+#import <BUFoundation/BUCommonMacros.h>
 #if __has_include(<MoPub/MoPub.h>)
-#import <MoPub/MoPub.h>
+    #import <MoPub/MoPub.h>
 #elif __has_include(<MoPubSDKFramework/MoPub.h>)
-#import <MoPubSDKFramework/MoPub.h>
+    #import <MoPubSDKFramework/MoPub.h>
 #else
-#import "MPBaseAdapterConfiguration.h"
+    #import "MoPub.h"
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Provides adapter information back to the SDK and is the main access point
- for all adapter-level configuration.
- */
-@interface FlurryAdapterConfiguration : MPBaseAdapterConfiguration
+@interface PangleAdapterConfiguration :MPBaseAdapterConfiguration
+
 // Caching
 /**
  Extracts the parameters used for network SDK initialization and if all required
@@ -29,14 +20,31 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)updateInitializationParameters:(NSDictionary *)parameters;
 
-// MPAdapterConfiguration
 @property (nonatomic, copy, readonly) NSString * adapterVersion;
 @property (nonatomic, copy, readonly) NSString * biddingToken;
 @property (nonatomic, copy, readonly) NSString * moPubNetworkName;
 @property (nonatomic, copy, readonly) NSString * networkSdkVersion;
 
+extern NSString * const kPangleNetworkName;
+extern NSString * const kPangleAppIdKey;
+extern NSString * const kPanglePlacementIdKey;
+
 - (void)initializeNetworkWithConfiguration:(NSDictionary<NSString *, id> * _Nullable)configuration
                                   complete:(void(^ _Nullable)(NSError * _Nullable))complete;
+
+
+// Set optional data for rewarded ad
++ (void)setUserId:(NSString *)userId;
++ (NSString *)userId;
++ (void)setRewardName:(NSString *)rewardName;
++ (NSString *)rewardName;
++ (void)setRewardAmount:(NSInteger)rewardAmount;
++ (NSInteger)rewardAmount;
++ (void)setMediaExtra:(NSString *)extra;
++ (NSString *)mediaExtra;
+
++ (void)pangleSDKInitWithAppId:(NSString *)appId;
+
 @end
 
 NS_ASSUME_NONNULL_END
